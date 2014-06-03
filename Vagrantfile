@@ -67,6 +67,9 @@ Vagrant.configure('2') do |config|
     end
 
     box.customize ['modifyvm', :id, '--memory', custom_config['memory']]
+    # Help to ensure we can resolve dns from the outside world.
+    box.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+    box.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
     box.name = custom_config['box_name']
     # Boot with a GUI so you can see the screen. (Default is headless)
     box.gui = custom_config['with_gui']
