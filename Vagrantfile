@@ -115,6 +115,11 @@ Vagrant.configure('2') do |config|
   # Enable ssh key forwarding
   config.ssh.forward_agent = true
 
+  #This next bit fixes the 'stdin is not a tty' error when shell provisioning Ubuntu boxes
+  config.vm.provision :shell,
+  #if there a line that only consists of 'mesg n' in /root/.profile, replace it with 'tty -s && mesg n'
+    :inline => "(grep -q -E '^mesg n$' /root/.profile && sed -i 's/^mesg n$/tty -s \\&\\& mesg n/g' /root/.profile && echo 'Ignore the previous error about stdin not being a tty. Fixing it now...') || exit 0;"
+
   # A quick bootstrap to get Puppet installed.
   config.vm.provision "shell", path: "scripts/bootstrap.sh"
 
