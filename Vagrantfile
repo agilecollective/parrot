@@ -91,7 +91,7 @@ Vagrant.configure('2') do |config|
   # MySQL
   config.vm.network :forwarded_port, :guest => 3306, :host => 3306
   # Varnish
-  config.vm.network :forwarded_port, :guest => 80, :host => 8181
+  config.vm.network :forwarded_port, :guest => 8181, :host => 8181
   # Apache
   config.vm.network :forwarded_port, :guest => 8080, :host => 8080
   # HTTPS
@@ -131,6 +131,9 @@ Vagrant.configure('2') do |config|
       "parrot_mysql_version" => custom_config['mysql_version'],
       "apache_vhost_webroot_subdir" => custom_config['webroot_subdir'],
       "parrot_varnish_enabled" => custom_config['varnish_enabled'],
+      "parrot_http_port" => custom_config['apache_http_port'],
+      "parrot_https_port" => custom_config['apache_https_port'],
+      "parrot_varnish_port" => custom_config['varnish_port'],
     }
   end
 end

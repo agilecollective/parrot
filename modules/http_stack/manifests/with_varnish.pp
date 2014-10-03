@@ -1,7 +1,7 @@
 class http_stack::with_varnish(
-  $apache_http_port  = 8080,
-  $apache_https_port  = 443,
-  $varnish_port      = 80
+  $apache_http_port  = $parrot_https_port,
+  $apache_https_port  = $parrot_https_port,
+  $varnish_port      = $parrot_varnish_port
 ) {
 
   class { http_stack:
