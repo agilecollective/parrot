@@ -54,9 +54,12 @@ Puppet::Type.type(:package).provide :pecl, :parent => Puppet::Provider::Package 
 
   def self.pearsplit(desc)
     case desc
-    when /^INSTALLED/: return nil
-    when /^=/: return nil
-    when /^PACKAGE/: return nil
+    when /^INSTALLED/
+	    return nil
+    when /^=/
+	    return nil
+    when /^PACKAGE/
+	    return nil
     when /^(\S+)\s+([.\d]+)\s+\S+\n/
       name = $1
       version = $2
