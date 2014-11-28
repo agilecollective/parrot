@@ -39,7 +39,7 @@ class parrot_repos {
       }
     }
     default: {
-      
+
     }
   }
 
@@ -51,4 +51,17 @@ class parrot_repos {
   	  key        => "C4DEFFEB",
       key_source => "http://repo.varnish-cache.org/debian/GPG-key.txt",
   }
+
+  # Add multiverse for Ubuntu 14.04 (has libapache2-mod-fastcgi)
+  case $parrot_ubuntu_version {
+    '14.04': {
+      apt::source { "ubuntu_trusty_multiverse":
+        location        => "http://archive.ubuntu.com/ubuntu",
+        release         => "trusty",
+        repos           => "main restricted universe multiverse",
+        include_src     => true
+      }
+    }
+  }
+
 }
