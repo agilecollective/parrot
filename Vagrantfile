@@ -17,6 +17,7 @@ def parse_config(
     'varnish_enabled' => false,
     'local_user_uid' => Process.uid,
     'local_user_gid' => Process.gid,
+    'ubuntu_version' => '12.04',
   }
   if File.exists?(config_file)
     overrides = YAML.load_file(config_file)
@@ -48,10 +49,20 @@ Vagrant.configure('2') do |config|
   # please see the online documentation at vagrantup.com.
 
   # Every Vagrant virtual environment requires a box to build off of.
-  if (bits == 32)
-    config.vm.box = "precise32"
-  else
-    config.vm.box = "precise64"
+  if (custom_config['ubuntu_version'] == '12.04')
+    if (bits == 32)
+      config.vm.box = "precise32"
+    else
+      config.vm.box = "precise64"
+    end
+  end
+
+  if (custom_config['ubuntu_version'] == '14.04')
+    if (bits == 32)
+      config.vm.box = "ubuntu/trusty32"
+    else
+      config.vm.box = "ubuntu/trusty64"
+    end
   end
 
   # Provide specific settings for VMWare Fusion
@@ -67,9 +78,9 @@ Vagrant.configure('2') do |config|
   # Give the created VM 768M of RAM
   config.vm.provider :virtualbox do |box, override|
     if (bits == 32)
-      override.vm.box_url = "http://files.vagrantup.com/precise32.box"
+#      override.vm.box_url = "http://files.vagrantup.com/precise32.box"
     else
-      override.vm.box_url = "http://files.vagrantup.com/precise64.box"
+#      override.vm.box_url = "http://files.vagrantup.com/precise64.box"
     end
 
     box.customize ['modifyvm', :id, '--memory', custom_config['memory']]
