@@ -131,6 +131,8 @@ Vagrant.configure('2') do |config|
 
   # Enable ssh key forwarding
   config.ssh.forward_agent = true
+  # Suppress the warning 'stdin is not a tty' - https://coderwall.com/p/qtbi5a/prevent-stdin-is-not-a-tty-error-in-vagrant  
+  config.ssh.shell = "bash -c 'BASH_ENV=/etc/profile exec bash'"
 
   # A quick bootstrap to get Puppet installed.
   config.vm.provision "shell", path: "scripts/bootstrap.sh"
