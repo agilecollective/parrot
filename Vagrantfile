@@ -18,6 +18,7 @@ def parse_config(
     'local_user_uid' => Process.uid,
     'local_user_gid' => Process.gid,
     'ubuntu_version' => '12.04',
+    'fqdn' => 'parrot.local.guest',
   }
   if File.exists?(config_file)
     overrides = YAML.load_file(config_file)
@@ -43,6 +44,8 @@ Vagrant.configure('2') do |config|
     bits = 32
   end
 
+  # Set a hostname
+  config.vm.hostname = "parrot.guest"
 
   # All Vagrant configuration is done here. The most common configuration
   # options are documented and commented below. For a complete reference,
@@ -140,12 +143,14 @@ Vagrant.configure('2') do |config|
     # Add a custom fact so we can reliably hit the host IP from the guest.
     puppet.facter = {
       "vagrant_guest_ip" => custom_config['ip'],
+      "parrot_ubuntu_version" => custom_config['ubuntu_version'],
       "parrot_php_version" => custom_config['php_version'],
       "parrot_mysql_version" => custom_config['mysql_version'],
       "apache_vhost_webroot_subdir" => custom_config['webroot_subdir'],
       "parrot_varnish_enabled" => custom_config['varnish_enabled'],
       "vagrant_host_user_uid" => custom_config['local_user_uid'],
       "vagrant_host_user_gid" => custom_config['local_user_gid'],
+      "fqdn" => custom_config['fqdn'],
     }
   end
 end
