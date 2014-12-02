@@ -49,6 +49,7 @@ class parrot_php (
 
   file {'/etc/php5/conf.d/':
     ensure => 'directory',
+    require => Package['php5'],
   }
 
   # Set up php.ini.
