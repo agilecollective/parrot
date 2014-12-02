@@ -47,10 +47,14 @@ class parrot_php (
   #  require => Class['pergola_php::config'],
   #}
 
+  file {'/etc/php5/conf.d/':
+    ensure => 'directory',
+  }
+
   # Set up php.ini.
   file {'/etc/php5/conf.d/zy-parrot.ini':
     source => '/vagrant_parrot_config/php/parrot-base.ini',
-    require => Package['php5'],
+    require => [Package['php5'], File['/etc/php5/conf.d/']],
     owner => 'root',
     group => 'root',
     notify => Service['apache2'],
@@ -60,7 +64,7 @@ class parrot_php (
   file {'/etc/php5/conf.d/zz-parrot.ini':
     source => ['/vagrant_parrot_config/php/parrot-local.ini',
                '/vagrant_parrot_config/php/parrot-local.ini.template'],
-    require => Package['php5'],
+    require => [Package['php5'], File['/etc/php5/conf.d/']],
     owner => 'root',
     group => 'root',
     notify => Service['apache2'],
@@ -92,12 +96,22 @@ class parrot_php (
     notify => Service['apache2', 'php5-fpm'],
   }
 
-  # Pull in the pear class, which will install uploadprogress for us.
-  class {'pear':
-    require => Package['php5'],
-    notify => Service['apache2'],
+  # Before installing pear, we will check the Ubuntu version
+  case $parrot_ubuntu_version {
+    '12.04': {
+      # Pull in the pear class, which will install uploadprogress for us.
+      class {'pear':
+        require => Package['php5'],
+        notify => Service['apache2'],
+      }
+    }
+    '14.04': {
+      #@todo - add install of uploadprogress via another method - compoaser?
+      # errors on vagrant provision like:
+      # ==> default: Error: Could not prefetch package provider 'pecl': undefined method `collect' for #<Puppet::Util::Execution::ProcessOutput:0x00000003ca2620>
+      # ==> default: Error: /Stage[main]/Pear/Package[uploadprogress]: Could not evaluate: undefined method `collect' for #<Puppet::Util::Execution::ProcessOutput:0x000000042212e0>
+    }
   }
-
 
   host { 'host_machine.parrot':
     ip => regsubst($vagrant_guest_ip,'^(\d+)\.(\d+)\.(\d+)\.(\d+)$','\1.\2.\3.1'),
