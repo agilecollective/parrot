@@ -16,4 +16,6 @@ class parrot_mysql::config {
 
   $mysql_query_cache_size = '16M'
 
+  $mysql_open_files_limit = '6000'
+
 }
