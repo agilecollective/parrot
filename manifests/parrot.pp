@@ -1,5 +1,10 @@
 node default {
 
+
+  Exec {
+    path => "/usr/bin:/usr/sbin/:/bin:/sbin"
+  }
+
   class {apt: }
   class { parrot_repos: }
   class { solr_server:  }
@@ -26,6 +31,8 @@ node default {
     ensure     => running,
     autoupdate => true,
   }
+
+  class { drush: }
 
 
 
