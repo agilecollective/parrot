@@ -166,7 +166,7 @@ Vagrant.configure('2') do |config|
     puppet.manifest_file  = "parrot.pp"
     puppet.module_path = "modules"
     # Suppress 'Warning: Config file /etc/puppet/hiera.yaml not found, using Hiera defaults'
-    puppet.options = "--hiera_config /vagrant/hiera.yaml"
+    # puppet.options = "--hiera_config /vagrant/hiera.yaml"
     # Add a custom fact so we can reliably hit the host IP from the guest.
     puppet.facter = {
       "vagrant_guest_ip" => custom_config['ip'],
