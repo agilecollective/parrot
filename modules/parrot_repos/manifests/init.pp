@@ -1,6 +1,5 @@
 class parrot_repos {
-  
-  
+
   # Add multiverse for Ubuntu 14.04 (has libapache2-mod-fastcgi)
   case $parrot_ubuntu_version {
     '14.04': {
@@ -8,10 +7,12 @@ class parrot_repos {
         location        => "http://archive.ubuntu.com/ubuntu",
         release         => "trusty",
         repos           => "main restricted universe multiverse",
-        include_src     => true
+        include         => {
+          'src' => true,
+        }
       }
     }
-    
+
     '12:04': {
         #Install PHP repos
 			  case $parrot_php_version {
@@ -44,7 +45,7 @@ class parrot_repos {
 			      }
 			    }
 			  }
-			  
+
 			   case $parrot_mysql_version {
 			    '5.6': {
 			      apt::source { 'mysql56':
@@ -53,10 +54,10 @@ class parrot_repos {
 			      }
 			    }
 			    default: {
-			
+
 			    }
 			  }
-			  
+
 		    # Add a repo for Varnish.
 			  apt::source { 'varnish':
 			      location   => 'http://repo.varnish-cache.org/ubuntu/',
@@ -65,16 +66,16 @@ class parrot_repos {
 			      key        => "C4DEFFEB",
 			      key_source => "http://repo.varnish-cache.org/debian/GPG-key.txt",
 			  }
-							  
-      
+
+
     }
   }
-  
-  
-  
 
 
- 
+
+
+
+
 
 
 

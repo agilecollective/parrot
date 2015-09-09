@@ -1,11 +1,6 @@
 node default {
 
-
-  Exec {
-    path => "/usr/bin:/usr/sbin/:/bin:/sbin"
-  }
-
-  class {apt: }
+  class { apt: }
   class { parrot_repos: }
   class { solr_server:  }
   class { parrot_mysql:  }
@@ -32,8 +27,33 @@ node default {
     autoupdate => true,
   }
 
-  class { drush: }
+  # Install nodejs and associated node packages
+  class { 'nodejs':
+    repo_url_suffix => 'node_0.12',
+  }
+  package { 'bower':
+    ensure   => present,
+    provider => 'npm',
+    require  => Class['nodejs'],
+  }
+  package { 'gulp':
+    ensure   => present,
+    provider => 'npm',
+    require  => Class['nodejs'],
+  }
+  package { 'grunt-cli':
+    ensure   => present,
+    provider => 'npm',
+    require  => Class['nodejs'],
+  }
 
-
+  # Optionally install drush
+  case $parrot_drush_installed {
+    'true', true: {
+      class {'drush':
+        drush_branch => $parrot_drush_branch,
+      }
+    }
+  }
 
 }

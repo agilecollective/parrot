@@ -2,6 +2,7 @@ class parrot_php (
   $fpm_user_uid  = $vagrant_host_user_uid,
   $fpm_user_gid  = $vagrant_host_user_gid,
 )
+
 {
 
   $php_packages = [
@@ -19,10 +20,18 @@ class parrot_php (
    'php5-fpm',
   ]
 
-  #Install PHP
+  # Install PHP
   package { $php_packages:
     ensure => 'latest',
     require => Class["parrot_repos"],
+  }
+
+  # Readline is included with PHP 5.3 but not later versions.
+  if $parrot_php_version > 5.3 {
+    package { 'php5-readline':
+      ensure => 'latest',
+      require => Class["parrot_repos"],
+    }
   }
 
   # We don't use xhprof from the ubuntu package any more.

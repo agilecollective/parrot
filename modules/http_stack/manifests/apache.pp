@@ -28,7 +28,7 @@ class http_stack::apache(
   }
 
   case $parrot_php_version {
-    '5.5': {
+    '5.5', '5.6': {
       package { "apache2-threaded-dev":
         ensure => absent,
       }

@@ -13,7 +13,7 @@ class phpmyadmin {
   # The file is /etc/phpmyadmin/apache.conf: this needs to be symlinked so that
   # it's loaded by Apache.
   case $parrot_php_version {
-    '5.5': {
+    '5.6', '5.5': {
       file { '/etc/apache2/conf-enabled/phpmyadmin.conf':
         ensure => link,
         target => '/etc/phpmyadmin/apache.conf',

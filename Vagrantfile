@@ -20,6 +20,8 @@ def parse_config(
     'local_user_gid' => Process.gid,
     'ubuntu_version' => '12.04',
     'fqdn' => 'parrot.local.guest',
+    'drush_installed' => false,
+    'drush_branch' => '6.x',
     'forward_solr' => true,
     'forward_mysql' => true,
     'forward_varnish' => true,
@@ -143,7 +145,7 @@ Vagrant.configure('2') do |config|
   # folder, and the third is the path on the host to the actual folder.
   config.vm.synced_folder "parrot-config", "/vagrant_parrot_config"
 
-  config.vm.synced_folder custom_config['sites'], "/vagrant_sites", :nfs => true
+  config.vm.synced_folder custom_config['sites'], "/vagrant_sites", :nfs => true, :mount_options => ['actimeo=2']
   config.vm.synced_folder custom_config['databases'], "/vagrant_databases"
 
 
@@ -154,7 +156,7 @@ Vagrant.configure('2') do |config|
 
   # Enable ssh key forwarding
   config.ssh.forward_agent = true
-  # Suppress the warning 'stdin is not a tty' - https://coderwall.com/p/qtbi5a/prevent-stdin-is-not-a-tty-error-in-vagrant  
+  # Suppress the warning 'stdin is not a tty' - https://coderwall.com/p/qtbi5a/prevent-stdin-is-not-a-tty-error-in-vagrant
   config.ssh.shell = "bash -c 'BASH_ENV=/etc/profile exec bash'"
 
   # A quick bootstrap to get Puppet installed.
@@ -178,6 +180,9 @@ Vagrant.configure('2') do |config|
       "vagrant_host_user_uid" => custom_config['local_user_uid'],
       "vagrant_host_user_gid" => custom_config['local_user_gid'],
       "fqdn" => custom_config['fqdn'],
+      "parrot_drush_installed" => custom_config['drush_installed'],
+      "parrot_drush_branch" => custom_config['drush_branch'],
     }
+
   end
 end
