@@ -1,6 +1,5 @@
 node default {
-
-  class { apt: }
+  
   class { parrot_repos: }
   class { solr_server:  }
   class { parrot_mysql:  }

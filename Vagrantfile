@@ -38,6 +38,7 @@ end
 
 Vagrant.require_version ">= 1.3.0"
 
+
 Vagrant.configure('2') do |config|
   # All Vagrant configuration is done here. The most common configuration
   # options are documented and commented below. For a complete reference,
@@ -74,6 +75,11 @@ Vagrant.configure('2') do |config|
       config.vm.box = "ubuntu/trusty32"
     else
       config.vm.box = "ubuntu/trusty64"
+    end
+    # Ubuntu 14.04 currently only supports PHP 5.5
+    if (custom_config['php_version'] != '5.5')
+      puts "[warning] PHP version #{custom_config['php_version']} is not supported on Ubuntu 14.04, using PHP 5.5."
+      custom_config['php_version'] = '5.5'
     end
   end
 

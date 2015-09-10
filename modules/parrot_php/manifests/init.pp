@@ -7,7 +7,6 @@ class parrot_php (
 
   $php_packages = [
    'php5',
-#   'php5-suhosin',
    'php5-cgi',
    'php-apc',
    'php5-cli',
@@ -40,7 +39,7 @@ class parrot_php (
   }
 
   # We need a user to exist that will run our PHP.
-  user {'host_user':
+  user { 'vagrant':
     ensure => 'present',
     uid => $fpm_user_uid,
     gid => $fpm_user_gid,
