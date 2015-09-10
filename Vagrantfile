@@ -38,13 +38,24 @@ end
 
 Vagrant.require_version ">= 1.3.0"
 
-
 Vagrant.configure('2') do |config|
   # All Vagrant configuration is done here. The most common configuration
   # options are documented and commented below. For a complete reference,
   # please see the online documentation at vagrantup.com.
 
   custom_config = parse_config
+
+  # Ubuntu 14.04 currently only supports PHP 5.5
+  if (custom_config['ubuntu_version'] == '14.04')
+    if (custom_config['php_version'] != '5.5')
+      if Vagrant.has_plugin?("vagrant-triggers")
+        config.trigger.after :up do
+          puts "[warning] PHP version #{custom_config['php_version']} is not supported on Ubuntu 14.04, using PHP 5.5."
+        end
+      end
+      custom_config['php_version'] = '5.5'
+    end
+  end
 
   # Note the backticks on this next line.
   architecture = `uname -m`.strip
@@ -62,7 +73,13 @@ Vagrant.configure('2') do |config|
   # please see the online documentation at vagrantup.com.
 
   # Every Vagrant virtual environment requires a box to build off of.
-  if (custom_config['ubuntu_version'] == '12.04')
+  if (custom_config['ubuntu_version'] == '14.04')
+    if (bits == 32)
+      config.vm.box = "ubuntu/trusty32"
+    else
+      config.vm.box = "ubuntu/trusty64"
+    end
+  else
     if (bits == 32)
       config.vm.box = "precise32"
     else
@@ -70,41 +87,35 @@ Vagrant.configure('2') do |config|
     end
   end
 
-  if (custom_config['ubuntu_version'] == '14.04')
-    if (bits == 32)
-      config.vm.box = "ubuntu/trusty32"
-    else
-      config.vm.box = "ubuntu/trusty64"
-    end
-    # Ubuntu 14.04 currently only supports PHP 5.5
-    if (custom_config['php_version'] != '5.5')
-      puts "[warning] PHP version #{custom_config['php_version']} is not supported on Ubuntu 14.04, using PHP 5.5."
-      custom_config['php_version'] = '5.5'
-    end
-  end
-
   # Provide specific settings for VMWare Fusion
   config.vm.provider "vmware_fusion" do |box, override|
     override.vm.box = "precise64"
     override.vm.box_url = "http://files.vagrantup.com/precise64_vmware.box"
-
     box.vmx["memsize"] = custom_config['memory']
     box.vmx["numvcpus"] = custom_config['cpus']
     # Boot with a GUI so you can see the screen. (Default is headless)
     box.gui = custom_config['with_gui']
   end
 
-  # Give the created VM 768M of RAM
+  # Provide specific settings for Oracle Virtualbox
   config.vm.provider :virtualbox do |box, override|
-    if (bits == 32)
-#      override.vm.box_url = "http://files.vagrantup.com/precise32.box"
+    # Set box URL depending on Ubuntu version and architecture
+    if (custom_config['ubuntu_version'] == '14.04')
+      if (bits == 32)
+        override.vm.box_url = "https://cloud-images.ubuntu.com/vagrant/trusty/current/trusty-server-cloudimg-i386-vagrant-disk1.box"
+      else
+        override.vm.box_url = "https://cloud-images.ubuntu.com/vagrant/trusty/current/trusty-server-cloudimg-amd64-vagrant-disk1.box"
+      end
     else
-#      override.vm.box_url = "http://files.vagrantup.com/precise64.box"
+      if (bits == 32)
+        override.vm.box_url = "http://files.vagrantup.com/precise32.box"
+      else
+        override.vm.box_url = "http://files.vagrantup.com/precise64.box"
+      end
     end
-
     # Specify number of cpus/cores to use
     box.customize ["modifyvm", :id, "--cpus", custom_config['cpus']]
-
+    # Set memory
     box.customize ['modifyvm', :id, '--memory', custom_config['memory']]
     box.name = custom_config['box_name']
     # Boot with a GUI so you can see the screen. (Default is headless)
@@ -119,7 +130,6 @@ Vagrant.configure('2') do |config|
 
   # Forward a port from the guest to the host, which allows for outside
   # computers to access the VM, whereas host only networking does not.
-
 
   # Solr
   if custom_config['forward_solr']
@@ -153,7 +163,6 @@ Vagrant.configure('2') do |config|
 
   config.vm.synced_folder custom_config['sites'], "/vagrant_sites", :nfs => true, :mount_options => ['actimeo=2']
   config.vm.synced_folder custom_config['databases'], "/vagrant_databases"
-
 
   # Use Vagrant Cachier
   if Vagrant.has_plugin?("vagrant-cachier")

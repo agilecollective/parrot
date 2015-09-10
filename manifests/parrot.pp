@@ -1,6 +1,8 @@
 node default {
   
-  class { parrot_repos: }
+  class { parrot_repos:
+    notify => Exec['apt_update'],
+  }
   class { solr_server:  }
   class { parrot_mysql:  }
   class { parrot_php:  }
