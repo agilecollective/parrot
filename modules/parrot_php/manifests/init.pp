@@ -1,4 +1,5 @@
 class parrot_php (
+  $fpm_user_name = $vagrant_host_user_name,
   $fpm_user_uid  = $vagrant_host_user_uid,
   $fpm_user_gid  = $vagrant_host_user_gid,
 )
@@ -45,7 +46,7 @@ class parrot_php (
   }
 
   # We need a user to exist that will run our PHP.
-  user { 'vagrant':
+  user { $fpm_user_name:
     ensure => 'present',
     uid => $fpm_user_uid,
     gid => $fpm_user_gid,

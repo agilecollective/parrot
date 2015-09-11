@@ -4,6 +4,7 @@ def parse_config(
   config_file=File.expand_path(File.join(File.dirname(__FILE__), 'config.yml'))
 )
   require 'yaml'
+  require 'rbconfig'
   config = {
     'sites' => "sites",
     'webroot_subdir' => "",
@@ -16,6 +17,7 @@ def parse_config(
     'mysql_version' => '5.5',
     'box_name' => 'Parrot',
     'varnish_enabled' => false,
+    'local_user_name' => 'host_user',
     'local_user_uid' => Process.uid,
     'local_user_gid' => Process.gid,
     'ubuntu_version' => '12.04',
@@ -29,6 +31,10 @@ def parse_config(
     'forward_https' => true,
     'forward_dovecot' => true,
   }
+  # PHP FPM user should be vagrant for Linux hosts
+  if /linux/.match(RbConfig::CONFIG['host_os'])
+    config['local_user_name'] = 'vagrant'
+  end
   if File.exists?(config_file)
     overrides = YAML.load_file(config_file)
     config.merge!(overrides)
@@ -192,6 +198,7 @@ Vagrant.configure('2') do |config|
       "parrot_mysql_version" => custom_config['mysql_version'],
       "apache_vhost_webroot_subdir" => custom_config['webroot_subdir'],
       "parrot_varnish_enabled" => custom_config['varnish_enabled'],
+      "vagrant_host_user_name" => custom_config['local_user_name'],
       "vagrant_host_user_uid" => custom_config['local_user_uid'],
       "vagrant_host_user_gid" => custom_config['local_user_gid'],
       "fqdn" => custom_config['fqdn'],
