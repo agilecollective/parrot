@@ -8,7 +8,10 @@ class http_stack::varnish(
 
     package { varnish:
        ensure => latest,
-       require => Class["parrot_repos"],
+       require => [
+         Class["parrot_repos"],
+         Exec['apt_update'],
+       ],
     }
 
     file { "/etc/varnish/default.vcl":

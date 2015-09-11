@@ -11,7 +11,10 @@ class http_stack::apache(
   ]
   package { $apache_packages:
     ensure => 'latest',
-    require => Class["parrot_repos"],
+    require => [
+      Class["parrot_repos"],
+      Exec['apt_update'],
+    ],
   }
 
   package {'libapache2-mod-php5':
@@ -52,7 +55,10 @@ class http_stack::apache(
     default: {
       package { "apache2-threaded-dev":
         ensure => latest,
-        require => Class["parrot_repos"],
+        require => [
+          Class["parrot_repos"],
+          Exec['apt_update'],
+        ],
       }
       file { '/etc/apache2/conf.d/php-fpm':
         content => template('http_stack/apache/php-fpm.conf.erb'),

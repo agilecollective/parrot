@@ -6,7 +6,7 @@ class parrot_repos {
       apt::source { "ubuntu_trusty_multiverse":
         location        => "http://archive.ubuntu.com/ubuntu",
         release         => "trusty",
-        repos           => "main restricted universe multiverse",
+        repos           => "multiverse",
         include         => {
           'src' => true,
         }

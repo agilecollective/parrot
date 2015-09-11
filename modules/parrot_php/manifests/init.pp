@@ -22,14 +22,20 @@ class parrot_php (
   # Install PHP
   package { $php_packages:
     ensure => 'latest',
-    require => Class["parrot_repos"],
+    require => [
+      Class["parrot_repos"],
+      Exec['apt_update'],
+    ],
   }
 
   # Readline is included with PHP 5.3 but not later versions.
   if $parrot_php_version > 5.3 {
     package { 'php5-readline':
       ensure => 'latest',
-      require => Class["parrot_repos"],
+      require => [
+        Class["parrot_repos"],
+        Exec['apt_update'],
+      ],
     }
   }
 

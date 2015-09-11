@@ -7,7 +7,10 @@ class parrot_mysql {
     ensure => latest,
     module_name => 'parrot_mysql',
     before => File['/etc/mysql/conf.d/parrot.cnf'],
-    require => Class["parrot_repos"],
+    require => [
+      Class["parrot_repos"],
+      Exec['apt_update'],
+    ],
   }
 
   file {'/etc/mysql/conf.d/parrot.cnf':
@@ -25,7 +28,10 @@ class parrot_mysql {
   }
 
   package {'mysql-client': 
-    require => Class["parrot_repos"],
+    require => [
+      Class["parrot_repos"],
+      Exec['apt_update'],
+    ],
   }
 
   # Create the user for the DB from the host machine
