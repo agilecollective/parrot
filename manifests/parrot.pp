@@ -27,6 +27,7 @@ node default {
     autoupdate => true,
   }
 
-
+  # Install composer and behat
+  class { composer::behat: }
 
 }
