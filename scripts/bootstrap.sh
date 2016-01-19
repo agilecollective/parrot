@@ -7,8 +7,14 @@ if [ ! -f /var/.parrot-bootstrapped ]; then
   # Need to update the apt cache.
   apt-get update
 
-  # Need to make sure we have the latest version of puppet.
-  DEBIAN_FRONTEND=noninteractive apt-get -q -y install puppet
+  # Update Puppet to latest version (needed for npm package provider)
+  wget -O /tmp/puppetlabs-release-precise.deb http://apt.puppetlabs.com/puppetlabs-release-precise.deb
+  dpkg -i /tmp/puppetlabs-release-precise.deb
+  apt-get update
+  apt-get --assume-yes install puppet
+
+  # Remove deprecated Puppet config
+  sed -i '/templatedir/d' /etc/puppet/puppet.conf
 
   # Ensure that we only run once.
   touch /var/.parrot-bootstrapped

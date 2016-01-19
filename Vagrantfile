@@ -141,7 +141,7 @@ Vagrant.configure('2') do |config|
   # an identifier, the second is the path on the guest to mount the
   # folder, and the third is the path on the host to the actual folder.
   config.vm.synced_folder "parrot-config", "/vagrant_parrot_config"
- 
+
   if custom_config['use_nfs']
     config.vm.synced_folder custom_config['sites'], "/vagrant_sites", :nfs => true
   else
@@ -178,6 +178,7 @@ Vagrant.configure('2') do |config|
       "parrot_varnish_enabled" => custom_config['varnish_enabled'],
       "vagrant_host_user_uid" => custom_config['local_user_uid'],
       "vagrant_host_user_gid" => custom_config['local_user_gid'],
+      "parrot_gulp_enabled" => custom_config['gulp_enabled'],
     }
   end
 end

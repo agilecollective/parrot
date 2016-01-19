@@ -27,6 +27,27 @@ node default {
   # Ensure ntp is installed.
   class { '::ntp': }
 
-
-
+  # Install nodejs and associated node packages for gulp
+  case $parrot_gulp_enabled {
+    'true', true: {
+      class { 'nodejs':
+        #repo_url_suffix => '0.12',
+      }
+      package { 'bower':
+        ensure   => present,
+        provider => 'npm',
+        require  => Class['nodejs'],
+      }
+      package { 'gulp':
+        ensure   => present,
+        provider => 'npm',
+        require  => Class['nodejs'],
+      }
+      package { 'grunt-cli':
+        ensure   => present,
+        provider => 'npm',
+        require  => Class['nodejs'],
+      }
+    }
+  }
 }
