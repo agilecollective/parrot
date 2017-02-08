@@ -17,10 +17,13 @@ node default {
   ->
   anchor {"parrot:end": }
 
-  class { 'ohmyzsh': }
-  ohmyzsh::install { ['root', 'vagrant']: }
-  ohmyzsh::theme { ['root', 'vagrant']: theme => 'steeef' } # specific theme
-  class { sudoers: }
+  case $parrot_ohmyzsh_enabled {
+    class { 'ohmyzsh': }
+    ohmyzsh::install { ['root', 'vagrant']: }
+    ohmyzsh::theme { ['root', 'vagrant']: theme => 'steeef' } # specific theme
+    class { sudoers: }
+  }
+
   case $parrot_varnish_enabled {
     'true', true: {
       class { 'http_stack::with_varnish':
