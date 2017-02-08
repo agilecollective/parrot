@@ -40,6 +40,8 @@ class parrot_php (
 
     'php-uploadprogress',
     'php-mysql',
+    'php-gd',
+    'php-curl',
 
   ]
 
