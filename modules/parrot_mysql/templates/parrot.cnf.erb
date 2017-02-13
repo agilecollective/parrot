@@ -9,6 +9,7 @@ innodb_buffer_pool_size = <%= scope.lookupvar('parrot_mysql::config::innodb_buff
 key_buffer_size = <%= scope.lookupvar('parrot_mysql::config::key_buffer_size') %>
 max_connections = <%= scope.lookupvar('parrot_mysql::config::mysql_max_connections') %>
 table_open_cache = <%= scope.lookupvar('parrot_mysql::config::table_cache') %>
+open_files_limit = 20000
 
 default_storage_engine  = innodb
 
