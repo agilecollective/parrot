@@ -143,7 +143,7 @@ Vagrant.configure('2') do |config|
   config.vm.synced_folder "parrot-config", "/vagrant_parrot_config"
 
   if custom_config['use_nfs']
-    config.vm.synced_folder custom_config['sites'], "/vagrant_sites", :nfs => true
+    config.vm.synced_folder custom_config['sites'], "/vagrant_sites", :nfs => true, :mount_options => ['actimeo=2']
   else
     config.vm.synced_folder custom_config['sites'], "/vagrant_sites"
   end
